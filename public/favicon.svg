@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="18" fill="#241b2c" />
+  <path d="M13 15h18v18h20v18H13z" fill="#caff3d" />
+  <text
+    x="32"
+    y="44"
+    fill="#241b2c"
+    font-family="Arial, sans-serif"
+    font-size="19"
+    font-weight="700"
+    text-anchor="middle"
+  >T3</text>
+</svg>
