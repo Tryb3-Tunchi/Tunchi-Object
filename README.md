@@ -37,6 +37,7 @@ Tryb3 is an HNG15 Lesson 2 individual shop: a small, editorial storefront for us
 5. Configure Google sign-in (optional alternative to email/password):
    - In Google Cloud Console, create an OAuth client and add `https://YOUR_PROJECT_REF.supabase.co/auth/v1/callback` as an authorized redirect URI.
    - In Supabase, enable Google under **Authentication → Providers → Google** and enter the Google client ID and client secret there. Save the settings and ensure the provider toggle is enabled.
+   - Add `https://YOUR_DEPLOYED_DOMAIN/**` to Supabase **Authentication → URL Configuration → Redirect URLs**. This app uses PKCE for browser sign-in and returns users to `/login` before navigating them to the requested page (or Home for a normal sign-in).
 
    The OAuth client secret remains in Supabase and is never exposed to the browser.
 
