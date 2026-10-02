@@ -37,7 +37,7 @@ export default function Login() {
       requestedPath?.startsWith("/") &&
       !requestedPath.startsWith("//")
         ? requestedPath
-        : "/checkout";
+        : "/";
 
     sessionStorage.removeItem(REDIRECT_KEY);
     navigate(from, { replace: true });
@@ -79,7 +79,7 @@ export default function Login() {
           location.state as {
             from?: string;
           } | null
-        )?.from ?? "/checkout";
+        )?.from ?? "/";
       sessionStorage.setItem(REDIRECT_KEY, requestedPath);
       await signInWithGoogle();
     } catch (authError) {
