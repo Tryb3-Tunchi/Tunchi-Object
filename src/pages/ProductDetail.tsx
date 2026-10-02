@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Check, ShoppingBag } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Check, Minus, Plus, ShoppingBag } from "lucide-react";
 
 import { useCart } from "../contexts/CartContext";
 import { formatCurrency } from "../lib/format";
@@ -10,10 +10,12 @@ import type { Product } from "../types";
 export default function ProductDetail() {
   const { slug } = useParams();
   const { addItem } = useCart();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [added, setAdded] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     let active = true;
@@ -22,6 +24,7 @@ export default function ProductDetail() {
       setLoading(true);
       setError("");
       setProduct(null);
+      setQuantity(1);
 
       if (!slug) {
         setError("This product could not be found.");
@@ -62,9 +65,18 @@ export default function ProductDetail() {
       return;
     }
 
-    addItem(product);
+    addItem(product, quantity);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1200);
+  }
+
+  function handleBuyNow() {
+    if (!product || product.stock < 1) {
+      return;
+    }
+
+    addItem(product, quantity);
+    navigate("/checkout");
   }
 
   if (loading) {
@@ -128,14 +140,52 @@ export default function ProductDetail() {
           <p className="mt-5 text-xs text-[#716779]">
             {product.stock > 0 ? "In stock" : "Currently out of stock"}
           </p>
+          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <div
+              className="flex items-center gap-3 rounded-full border border-[#d8d0df] px-2 py-1"
+              aria-label="Choose quantity"
+            >
+              <button
+                type="button"
+                onClick={() => setQuantity((current) => Math.max(1, current - 1))}
+                disabled={quantity <= 1 || product.stock < 1}
+                aria-label="Decrease quantity"
+                className="focus-ring grid h-9 w-9 place-items-center rounded-full hover:bg-[#ebe4f0] disabled:opacity-40"
+              >
+                <Minus size={15} aria-hidden="true" />
+              </button>
+              <span className="min-w-5 text-center text-sm" aria-live="polite">
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={() =>
+                  setQuantity((current) => Math.min(product.stock, current + 1))
+                }
+                disabled={quantity >= product.stock}
+                aria-label="Increase quantity"
+                className="focus-ring grid h-9 w-9 place-items-center rounded-full hover:bg-[#ebe4f0] disabled:opacity-40"
+              >
+                <Plus size={15} aria-hidden="true" />
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={handleAddToBag}
+              disabled={product.stock < 1}
+              className="focus-ring inline-flex items-center gap-2 rounded-full bg-[#caff3d] px-6 py-3.5 text-sm font-semibold text-[#241b2c] transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {added ? <Check size={16} /> : <ShoppingBag size={16} />}
+              {added ? "Added to bag" : "Add to bag"}
+            </button>
+          </div>
           <button
             type="button"
-            onClick={handleAddToBag}
+            onClick={handleBuyNow}
             disabled={product.stock < 1}
-            className="focus-ring mt-7 inline-flex w-fit items-center gap-2 rounded-full bg-[#caff3d] px-6 py-3.5 text-sm font-semibold text-[#241b2c] transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
+            className="focus-ring mt-3 w-fit rounded-full bg-[#241b2c] px-6 py-3.5 text-sm font-semibold text-[#f4f1f7] transition hover:bg-[#443252] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {added ? <Check size={16} /> : <ShoppingBag size={16} />}
-            {added ? "Added to bag" : "Add to bag"}
+            Buy now
           </button>
         </div>
       </div>

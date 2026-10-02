@@ -82,3 +82,5 @@ npm run build
 For Vercel, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` in the project's environment settings, then deploy the Vite app. Keep Mailgun secrets in Supabase Edge Function secrets, not Vercel's browser-exposed variables.
 
 If the deployed page reports missing Supabase environment variables, add both values under **Vercel → Project → Settings → Environment Variables** for every environment you deploy (Production, and Preview if needed), then trigger a new deployment. Vite embeds these values at build time; changing the settings does not update an already-built deployment.
+
+`vercel.json` rewrites browser routes to the Vite app entry point so directly opening or refreshing `/shop`, `/login`, `/checkout`, `/products/:slug`, and other client routes loads the React app. A Vercel `404 DEPLOYMENT_NOT_FOUND` on the project hostname is different: confirm that the Vercel project has a successful deployment, then assign the hostname under **Project → Settings → Domains** or use the domain Vercel lists for that deployment. A rewrite cannot repair a hostname that is not assigned to an active deployment.

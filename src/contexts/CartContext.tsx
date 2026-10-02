@@ -21,6 +21,7 @@ type CartContextValue = {
 
   addItem: (
     product: Product,
+    quantity?: number,
   ) => void;
 
   removeItem: (
@@ -70,7 +71,15 @@ export function CartProvider({
     );
   }, [items]);
 
-  function addItem(product: Product) {
+  function addItem(product: Product, quantity = 1) {
+    if (
+      product.stock < 1 ||
+      !Number.isInteger(quantity) ||
+      quantity < 1
+    ) {
+      return;
+    }
+
     setItems((current) => {
       const existing =
         current.find(
@@ -85,7 +94,7 @@ export function CartProvider({
               ? {
                   ...item,
                   quantity: Math.min(
-                    item.quantity + 1,
+                    item.quantity + quantity,
                     product.stock,
                   ),
                 }
@@ -97,7 +106,7 @@ export function CartProvider({
         ...current,
         {
           ...product,
-          quantity: 1,
+          quantity: Math.min(quantity, product.stock),
         },
       ];
     });
