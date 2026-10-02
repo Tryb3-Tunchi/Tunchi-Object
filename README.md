@@ -80,3 +80,5 @@ npm run build
 ```
 
 For Vercel, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` in the project's environment settings, then deploy the Vite app. Keep Mailgun secrets in Supabase Edge Function secrets, not Vercel's browser-exposed variables.
+
+If the deployed page reports missing Supabase environment variables, add both values under **Vercel → Project → Settings → Environment Variables** for every environment you deploy (Production, and Preview if needed), then trigger a new deployment. Vite embeds these values at build time; changing the settings does not update an already-built deployment.

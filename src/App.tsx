@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Checkout from "./pages/Checkout";
 import Success from "./pages/Success";
 import Orders from "./pages/Orders";
+import ProductDetail from "./pages/ProductDetail";
 
 export default function App() {
   return (
@@ -25,6 +26,11 @@ export default function App() {
           <Route
             path="/shop"
             element={<Shop />}
+          />
+
+          <Route
+            path="/products/:slug"
+            element={<ProductDetail />}
           />
 
           <Route

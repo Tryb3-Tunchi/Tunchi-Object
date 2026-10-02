@@ -1,5 +1,6 @@
 import { ShoppingBag, Check } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import type { Product } from "../types";
 
@@ -26,16 +27,21 @@ export default function ProductCard({
     <article className="product-card group">
 
       <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#e6deeb]">
-
-        <img
-          src={product.image_url}
-          alt={product.name}
-          loading="lazy"
-          onError={(event) => {
-            event.currentTarget.hidden = true;
-          }}
-          className="product-image h-full w-full object-cover"
-        />
+        <Link
+          to={`/products/${encodeURIComponent(product.slug)}`}
+          aria-label={`View ${product.name} details`}
+          className="focus-ring block h-full"
+        >
+          <img
+            src={product.image_url}
+            alt={product.name}
+            loading="lazy"
+            onError={(event) => {
+              event.currentTarget.hidden = true;
+            }}
+            className="product-image h-full w-full object-cover"
+          />
+        </Link>
 
         <button
           type="button"
@@ -56,7 +62,12 @@ export default function ProductCard({
           </p>
 
           <h3 className="mt-1 text-sm font-semibold">
-            {product.name}
+            <Link
+              to={`/products/${encodeURIComponent(product.slug)}`}
+              className="focus-ring rounded-sm hover:underline"
+            >
+              {product.name}
+            </Link>
           </h3>
           <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-[#6b6374]">
             {product.description}
