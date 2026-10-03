@@ -35,9 +35,10 @@ Tryb3 is an HNG15 Lesson 2 individual shop: a small, editorial storefront for us
    Customers can create an account from the Tryb3 sign-in page. If email confirmations are enabled, they must confirm the signup message before they can sign in. Supabase's default email sender is rate-limited for testing; configure custom SMTP in Supabase before production signup traffic.
 
 5. Configure Google sign-in (optional alternative to email/password):
-   - In Google Cloud Console, create an OAuth client and add `https://YOUR_PROJECT_REF.supabase.co/auth/v1/callback` as an authorized redirect URI.
+   - In Google Cloud Console, create an OAuth client and add the exact Supabase Auth callback `https://YOUR_PROJECT_REF.supabase.co/auth/v1/callback` as an authorized redirect URI. Do not use the Vercel website URL as this Google callback.
    - In Supabase, enable Google under **Authentication → Providers → Google** and enter the Google client ID and client secret there. Save the settings and ensure the provider toggle is enabled.
-   - Add `https://YOUR_DEPLOYED_DOMAIN/**` to Supabase **Authentication → URL Configuration → Redirect URLs**. This app uses PKCE for browser sign-in and returns users to `/login` before navigating them to the requested page (or Home for a normal sign-in).
+   - Set the Supabase **Site URL** to the canonical deployed website origin (for example, `https://your-shop.vercel.app`). Add the exact callback `https://your-shop.vercel.app/login` to Supabase **Authentication → URL Configuration → Redirect URLs**. Sign in and return on the same website hostname; do not start on a Vercel preview/domain alias and return to a different hostname.
+   - This app uses PKCE for browser sign-in and returns users to `/login` before navigating them to the requested page (or Home for a normal sign-in). If Supabase returns `bad_oauth_state`, start one fresh sign-in attempt from the deployed site. If it repeats, verify that Google uses the callback above, that Supabase has the canonical `/login` redirect allowlisted, and that the deployment is using this Supabase project.
 
    The OAuth client secret remains in Supabase and is never exposed to the browser.
 

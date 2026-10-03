@@ -19,8 +19,15 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [oauthErrorDismissed, setOauthErrorDismissed] = useState(false);
   const [notice, setNotice] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const oauthError = (
+    location.state as {
+      oauthError?: string;
+    } | null
+  )?.oauthError;
+  const visibleError = error || (oauthErrorDismissed ? "" : oauthError);
 
   useEffect(() => {
     if (!user) {
@@ -47,6 +54,7 @@ export default function Login() {
     event.preventDefault();
     setSubmitting(true);
     setError("");
+    setOauthErrorDismissed(true);
     setNotice("");
 
     try {
@@ -73,6 +81,7 @@ export default function Login() {
   async function handleGoogleLogin() {
     try {
       setError("");
+      setOauthErrorDismissed(true);
       setNotice("");
       const requestedPath =
         (
@@ -155,6 +164,7 @@ export default function Login() {
             onClick={() => {
               setMode(mode === "sign-in" ? "sign-up" : "sign-in");
               setError("");
+              setOauthErrorDismissed(true);
               setNotice("");
             }}
             className="focus-ring rounded text-sm font-semibold text-[#5c3d83] underline underline-offset-4"
@@ -185,9 +195,9 @@ export default function Login() {
             {notice}
           </p>
         )}
-        {error && (
+        {visibleError && (
           <p role="alert" className="mt-4 rounded-xl bg-[#fbebeb] p-3 text-sm leading-5 text-red-800">
-            {error}
+            {visibleError}
           </p>
         )}
       </div>
